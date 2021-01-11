@@ -1,7 +1,14 @@
 import React, { useRef, useState } from 'react';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
-import firebase from 'firebase/app';
+//import './App.css';
+
+import firebase from './Firebase.js';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/analytics';
@@ -10,109 +17,55 @@ import 'firebase/analytics';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBjZ-QWn0k8TZ7QhW8XnCVK5mvDoZLxGmI",
-  authDomain: "chat-app-c0207.firebaseapp.com",
-  projectId: "chat-app-c0207",
-  storageBucket: "chat-app-c0207.appspot.com",
-  messagingSenderId: "760182975306",
-  appId: "1:760182975306:web:ea14e80bd7324b91bfafb3",
-  measurementId: "G-HG4S8MSW38"
-};
-//firebase.analytics();
+import ChatList from './components/ChatList.js';
+import FindNew from './components/FindNew.js';
+import Footer from './components/Footer.js';
+import Profile from './components/Profile.js';
+import ChatRoom from './components/ChatRoom.js';
+import SignOut from './components/SignOut.js';
+import SignIn from './components/SignIn.js';
 
-firebase.initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
+const auth = firebase.auth();  //firebase.auth.AUTH
 const firestore = firebase.firestore();
 const analytics = firebase.analytics();
 
 function App() {
 
   const [user] = useAuthState(auth);
-
+  
   return (
     <div className="App">
       <header>
         <h1>⚛️🔥💬</h1>
-        <SignOut />
+        <SignOut auth = {auth}/>
       </header>
 
-      <section>
+      {/* <section>
         {user ? <ChatRoom /> : <SignIn />}
-      </section>
+      </section> */}
+
+      <Router>
+        <Footer />
+        <Switch>
+          <Route path="/profile">
+            <Profile />
+          </Route>
+          <Route path="/new">
+            <FindNew />
+          </Route>
+          <Route path="/room">
+            {user ? <ChatRoom /> : <SignIn auth={auth}/>}
+          </Route>
+          <Route path="/">
+            {user ? <ChatList /> : <SignIn auth={auth}/>}
+          </Route>
+        </Switch>
+        
+      </Router>
 
     </div>
   );
-}
-
-function SignIn() {
-
-  const signInWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider);
-  }
-
-  return (
-    <button onClick={signInWithGoogle}>Sign in with Google</button>
-  )
-
-}
-
-function SignOut() {
-  return auth.currentUser && (
-    <button onClick={() => auth.signOut()}>Sign Out</button>
-  )
-}
-function ChatRoom(){
-
-  const messagesRef = firestore.collection('messages');
-  const query = messagesRef.orderBy('createdAt').limitToLast(25);
-
-  const [messages] = useCollectionData(query, { idField: 'id' });
-  const [formValue, setFormValue] = useState('');
-  const sendMessage = async (e) => {
-    e.preventDefault();
-
-    const { uid, photoURL } = auth.currentUser;
-
-    await messagesRef.add({
-      text: formValue,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      uid,
-      photoURL
-    })
-
-    setFormValue('');
-  }
-  return (<>
-    <main>
-      {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
-    </main>
-
-    <form onSubmit={sendMessage}>
-
-      <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="say something nice" />
-
-      <button type="submit" disabled={!formValue}>🕊️</button>
-
-    </form>
-  </>)
-}
-
-
-
-function ChatMessage(props) {
-  const { text, uid, photoURL } = props.message;
-
-  const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
-
-  return (<>
-    <div className={`message ${messageClass}`}>
-      <img src={photoURL} />
-      <p>{text}</p>
-    </div>
-  </>)
-}
+};
 
 export default App;
