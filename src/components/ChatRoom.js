@@ -3,8 +3,13 @@ import React , { useRef, useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import firebase from '../Firebase.js';
 import ChatMessage from './ChatMessage';
+
 const firestore = firebase.firestore();
+if (window.location.hostname === "localhost") {
+  firestore.useEmulator("localhost", 8080);
+}
 const auth = firebase.auth();
+firebase.auth().useEmulator('http://localhost:9099/');
 
 function ChatRoom(){
 

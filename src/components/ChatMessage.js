@@ -5,6 +5,7 @@ import 'firebase/auth';
 import 'firebase/analytics';
 
 const auth = firebase.auth();
+firebase.auth().useEmulator('http://localhost:9099/');
 
 function ChatMessage(props) {
   const { text, uid, photoURL } = props.message;

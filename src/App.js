@@ -27,7 +27,11 @@ import SignIn from './components/SignIn.js';
 
 
 const auth = firebase.auth();  //firebase.auth.AUTH
+firebase.auth().useEmulator('http://localhost:9099/');
 const firestore = firebase.firestore();
+if (window.location.hostname === "localhost") {
+  firestore.useEmulator("localhost", 8080);
+}
 const analytics = firebase.analytics();
 
 function App() {

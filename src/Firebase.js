@@ -10,7 +10,7 @@ const firebaseConfig = {
     measurementId: "G-HG4S8MSW38"
   };
   //firebase.analytics();
-  
-  firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+//firebase.functions().useEmulator("localhost", 5001);
 
   export default firebase;
