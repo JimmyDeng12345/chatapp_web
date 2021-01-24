@@ -1,8 +1,10 @@
 import React from 'react';
 
-function SignOut(props) {
-  return props.auth.currentUser && (
-    <button onClick={() => props.auth.signOut()}>Sign Out</button>
+import firebase, {firestore, auth} from '../Firebase.js';
+
+function SignOut() {
+  return auth.currentUser && (
+    <button onClick={() => auth.signOut()}>Sign Out</button>
   )
 };
 

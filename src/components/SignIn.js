@@ -1,19 +1,73 @@
-import React from 'react';
-import firebase from '../Firebase.js';
+import React, { useState } from 'react';
+import firebase, {firestore, auth} from '../Firebase.js';
 import 'firebase/auth';
 
-
-const auth = firebase.auth();
-firebase.auth().useEmulator('http://localhost:9099/');
 function SignIn() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  
+  const onChangeHandler = (event) => {
+    const { name, value } = event.currentTarget;
+
+    if (name === 'userEmail') {
+      setEmail(value);
+    }
+    else if (name === 'userPassword') {
+      setPassword(value);
+    }
+  };
+
 
   const signInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider);
   };
 
+
+  const signInWithEmailAndPasswordHandler = (event, email, password) => {
+    event.preventDefault();
+    auth.signInWithEmailAndPassword(email, password).catch(error => {
+      setError("Error signing in with password and email!");
+      console.error("Error signing in with password and email", error);
+    });
+  };
+
+
   return (
+    <div>
+    <form className="">
+      <label htmlFor="userEmail" className="block">
+        Email:
+        </label>
+      <input
+        type="email"
+        className="my-1 p-1 w-full"
+        name="userEmail"
+        value={email}
+        placeholder="E.g: faruq123@gmail.com"
+        id="userEmail"
+        onChange={(event) => onChangeHandler(event)}
+      />
+      <label htmlFor="userPassword" className="block">
+        Password:
+        </label>
+      <input
+        type="password"
+        className="mt-1 mb-3 p-1 w-full"
+        name="userPassword"
+        value={password}
+        placeholder="Your Password"
+        id="userPassword"
+        onChange={(event) => onChangeHandler(event)}
+      />
+      <button className="bg-green-400 hover:bg-green-500 w-full py-2 text-white" onClick={(event) => { signInWithEmailAndPasswordHandler(event, email, password) }}>
+        Sign in
+        </button>
+    </form>
+
     <button onClick={signInWithGoogle}>Sign in with Google</button>
+  </div>
   );
 };
 

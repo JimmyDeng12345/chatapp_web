@@ -1,19 +1,14 @@
 import React , { useRef, useState } from 'react';
 
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import firebase from '../Firebase.js';
+import firebase, {firestore, auth} from '../Firebase.js';
 import ChatMessage from './ChatMessage';
 
-const firestore = firebase.firestore();
-if (window.location.hostname === "localhost") {
-  firestore.useEmulator("localhost", 8080);
-}
-const auth = firebase.auth();
-firebase.auth().useEmulator('http://localhost:9099/');
+
 
 function ChatRoom(){
 
-  const messagesRef = firestore.collection('messages');
+  const messagesRef = firestore.collection('posts');
   const query = messagesRef.orderBy('createdAt').limitToLast(25);
 
   const [messages] = useCollectionData(query, { idField: 'id' });

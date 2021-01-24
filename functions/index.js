@@ -18,3 +18,28 @@ exports.writeToDataBase = functions.auth.user().onCreate(async (user) => {
         photoURL: photoURL || "NULL",
     });
 });
+
+
+
+exports.initConversation = functions.https.onCall((data,context) => {
+    var uidA = data.uidA;
+    var uidB = data.uidB;
+    combinedID = uidA > uidB ? uidB+uidA : uidA+uidB
+    admin.firestore().collection('messages').doc(combinedID).collection('chats').add({
+        text: "hi",
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        uidA:"A",
+        uidB:"B",
+        url: "url"
+    });
+    
+    admin.firestore().collection('users').doc(uidA).collection('strangers').add({
+        channelID: combinedID
+    });
+
+    admin.firestore().collection('users').doc(uidB).collection('strangers').add({
+        channelID: combinedID
+    });
+});
+
+

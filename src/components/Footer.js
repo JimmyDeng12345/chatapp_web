@@ -9,14 +9,17 @@ const Footer = () => {
             <Link to="/profile" className="item">
                 Profile
             </Link>
-            <Link to="/" className="item">
+            <Link to="/direct" className="item">
                 Chats
             </Link>
             <Link to="/new" className="item">
                 Chat with a new stranger!
+            </Link> 
+            <Link to="/signup" className="item">
+                SignUp
             </Link>
-            <Link to="/room" className="item">
-                chatRoom
+            <Link to="/" className="item">
+                Posts
             </Link>
         </div>
     );
