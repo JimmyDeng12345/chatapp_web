@@ -8,7 +8,7 @@ import {
 
 //import './App.css';
 
-import firebase, {firestore, auth} from './Firebase.js';
+import firebase, { firestore, auth } from './Firebase.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
@@ -22,24 +22,24 @@ import SignIn from './components/SignIn.js';
 import SignUp from './components/SignUp.js';
 import ChatRoom from './components/ChatRoom.js';
 
-
-// const auth = firebase.auth();  //firebase.auth.AUTH
-// firebase.auth().useEmulator('http://localhost:9099/');
-// const firestore = firebase.firestore();
-// if (window.location.hostname === "localhost") {
-//   firestore.useEmulator("localhost", 8080);
-// }
-
-
 function App() {
-
+  console.log('App rendered');
   const [user] = useAuthState(auth);
-  
+  const [roomNum, setRoomNum] = useState(" ");
+  const callbackFunction = (childData) => {
+    setRoomNum(childData);
+    console.log("APP:" + roomNum);
+  };
+  // const [roomNum, setRoomNum] = useState([]);
+
+  // const callbackFunction = (childData) => {
+  //     setRoomNum(childData);
+  // };
   return (
     <div className="App">
       <header>
         <h1>⚛️🔥💬</h1>
-        <SignOut auth = {auth}/>
+        <SignOut auth={auth} />
       </header>
 
       {/* <section>
@@ -62,20 +62,27 @@ function App() {
             {() => {
               if (!user) {
                 return <SignUp />;
-              }else{
+              } else {
                 return null;
               }
             }}
           </Route>
+          {/* {directRooms.map(channelid => <Route path={"direct/"+channelid}>
+            {user ? <div><ChatList parentCallback={callbackFunction}/> <ChatRoom2 channelid={channelid.channelID}/></div>  : <SignIn/>}
+          </Route>)} */}
           <Route path="/direct">
-            {user ? <ChatList /> : <SignIn/>}
+            {user ?
+              <div>
+                <ChatList parentCallback={callbackFunction}/>
+                {roomNum===" " ? <h1>No Room yet</h1> : <ChatRoom2 channelid={roomNum}/>}
+              </div> : <SignIn />}
           </Route>
           <Route path="/">
-          {user ? <ChatRoom/> : <SignIn/>}
+            {user ? <ChatRoom /> : <SignIn />}
           </Route>
 
         </Switch>
-        
+
       </BrowserRouter>
 
     </div>

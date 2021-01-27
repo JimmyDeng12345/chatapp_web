@@ -1,20 +1,31 @@
-import React, { useRef, useState } from 'react';
-import {withRouter} from 'react-router';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
-import firebase, {firestore, auth} from '../Firebase.js';
+import React, { useMemo, useRef, useState } from 'react';
+import { withRouter } from 'react-router';
+import { useCollectionData, useDocument, useDocumentData } from 'react-firebase-hooks/firestore';
+import firebase, { firestore, auth } from '../Firebase.js';
 import ChatMessage from './ChatMessage';
 
 
-function ChatRoom2(props) {
-    console.log("render");
-    const { channelid } = props.channelid;
-    const messagesRef = firestore.collection('messages').doc(channelid).collection('chats');
-    const query = messagesRef.orderBy('createdAt').limitToLast(25);
+const ChatRoom2 = (props) => {
 
+    console.log("chat room rendered");
+
+    function saveQuery() {
+        const channelid = props.channelid;
+        const messagesRef = firestore.collection('messages').doc(channelid).collection('chats');
+        const query = messagesRef.orderBy('createdAt').limitToLast(25);
+        return [messagesRef, query];
+    }
+
+    const [messagesRef, query] = useMemo(() => saveQuery(), [props.channelid]);
     const [messages] = useCollectionData(query, { idField: 'id' });
     const [formValue, setFormValue] = useState('');
+
     const sendMessage = async (e) => {
         e.preventDefault();
+
+        console.log(messagesRef);
+        console.log(query);
+        console.log(messages);
 
         const { uid, photoURL } = auth.currentUser;
 
@@ -43,4 +54,4 @@ function ChatRoom2(props) {
 }
 
 
-export default withRouter(ChatRoom2);
+export default ChatRoom2;

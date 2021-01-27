@@ -27,6 +27,7 @@ function ChatRoom(){
 
     setFormValue('');
   }
+  
   return (<>
     <main>
       {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}

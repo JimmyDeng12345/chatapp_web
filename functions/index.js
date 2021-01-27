@@ -43,3 +43,12 @@ exports.initConversation = functions.https.onCall((data,context) => {
 });
 
 
+exports.chooseRoom = functions.https.onCall((data,context) => {
+    var uid = data.uid;
+    var roomNum = data.roomNum;
+    admin.firestore().collection('users').doc(uid).set({
+        currentRoom: roomNum,
+    },  {merge: true});
+});
+
+
