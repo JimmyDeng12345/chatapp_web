@@ -1,24 +1,45 @@
 import React, { useState, useEffect } from 'react'
-import firebase, {firestore, auth} from '../Firebase.js';
+import firebase, { firestore, auth } from '../Firebase.js';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 
 const FindNew = () => {
-    firestore.collection('users')
-
-    const messagesRef = firestore.collection('users');
-    const query = messagesRef.orderBy('name');
-    const [users] = useCollectionData(query, { idField: 'id' });
+    //firestore.collection('users')
     const [foundUser, setFoundUser] = useState('no one');
-    const onClick = () => {
-        if (users) {
-            setFoundUser(users[0].name);
-            var initConversation = firebase.functions().httpsCallable('initConversation');
-            initConversation({ uidA: auth.currentUser.uid, uidB: users[0].id });
-        } else {
-            setFoundUser("Matching");
-        }
+    const [userCount, setUserCount] = useState(0);
+    // const [existed, setExisted] = useState([]);
+    // if(auth.currentUser){
+    //     const currentUser = firestore.collection('users').doc(auth.currentUser.uid);
+    //     const strangerList = currentUser.collection('strangers');
+    //     currentUser.get().then(function (doc) {
+    //         const currentUserIndex = doc.data().userCount;
+    //         if(!existed.includes(currentUserIndex)){
+    //             setExisted(existed.push(currentUserIndex));
+    //         }
+    //     });
+    // }
 
+
+    const onClick = () => {
+        setFoundUser("Matching");
+        const ref = firestore.collection('info').doc('userCount');
+        ref.get().then(function (doc) {
+            setUserCount(doc.data().userCount);
+        });
+        console.log("userCount "+ userCount);
+        var randomIndex = Math.floor(Math.random() * userCount) + 1;  // returns a random integer from 1 to userCount
+        console.log("random: "+ randomIndex);
+        const messagesRef = firestore.collection('users');
+        var query = messagesRef.where("userCount", "==", randomIndex);
+        query.get().then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+                var users = doc;
+                
+                setFoundUser(users.data().name);
+                var initConversation = firebase.functions().httpsCallable('initConversation');
+                initConversation({ uidA: auth.currentUser.uid, uidB: users.id });
+            });
+        });
         // combinedID = uidA > uidB ? uidB+uidA : uidA+uidB
         // firestore.collection('messages').doc(combinedID).collection('chats').add({
         //     text: "hi",

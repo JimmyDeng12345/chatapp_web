@@ -23,4 +23,6 @@ if (window.location.hostname === "localhost") {
 export const auth = firebase.auth();
 firebase.auth().useEmulator('http://localhost:9099/');
 export const analytics = firebase.analytics();
+//export const storage = firebase.storage();
+
 export default firebase;

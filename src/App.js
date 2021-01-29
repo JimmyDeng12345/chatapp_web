@@ -39,7 +39,7 @@ function App() {
     <div className="App">
       <header>
         <h1>⚛️🔥💬</h1>
-        <SignOut auth={auth} />
+        <SignOut parentCallback={callbackFunction}/>
       </header>
 
       {/* <section>

@@ -19,7 +19,7 @@ import ChatRoom2 from './ChatRoom2.js';
 const ChatList = (props) => {
 
     console.log("list rendered");
-    const query = firestore.collection('users').doc(auth.currentUser.uid).collection('strangers').orderBy('channelID').limitToLast(10);
+    const query = firestore.collection('users').doc(auth.currentUser.uid).collection('strangers').orderBy('channelID');
     //console.log(query);
     const [channelidArr] = useCollectionData(query, { idField: 'id' });
     //console.log(channelIDs);
