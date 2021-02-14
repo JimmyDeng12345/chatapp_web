@@ -3,6 +3,7 @@ import firebase, {firestore, auth} from '../Firebase.js';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/analytics';
+import './ChatMessage.css';
 
 
 function ChatMessage(props) {

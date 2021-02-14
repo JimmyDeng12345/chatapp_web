@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import './App.css';
 import {
   BrowserRouter,
   Switch,
@@ -46,8 +47,8 @@ function App() {
         {user ? <ChatRoom /> : <SignIn />}
       </section> */}
 
-      <BrowserRouter >
-        <Footer />
+      <BrowserRouter className="navbar navbar-default">
+        <Footer className= ""/>
         <Switch>
           <Route path="/profile">
             <Profile />

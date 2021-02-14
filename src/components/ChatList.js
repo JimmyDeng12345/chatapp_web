@@ -1,5 +1,5 @@
 import React, { withRouter, useState, useEffect } from 'react'
-
+import "./ChatList.css"
 import {
     BrowserRouter as Router,
     Switch,
@@ -37,12 +37,10 @@ const ChatList = (props) => {
     //     chooseRoom({ uid: auth.currentUser.uid, roomNum: roomID });
     // }
     return (
-        <div>
+        <div className = "vertical-menu">
             {channelidArr && channelidArr.map(channelid =>
-                <div>
-                    <button key={channelid.channelID} onClick={()=>props.parentCallback(channelid.channelID)}>{channelid.channelID}</button>
-                    <br />
-                </div>)}
+                    <a key={channelid.channelID} onClick={()=>props.parentCallback(channelid.channelID)}>{channelid.channelID}</a>
+                )}
         </div>
     );
 };

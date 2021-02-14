@@ -3,6 +3,7 @@ import React , { useRef, useState } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import firebase, {firestore, auth} from '../Firebase.js';
 import ChatMessage from './ChatMessage';
+import './ChatRoom.css';
 
 
 
