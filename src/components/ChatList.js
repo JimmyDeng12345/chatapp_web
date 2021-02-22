@@ -17,9 +17,9 @@ import ChatRoom2 from './ChatRoom2.js';
 
 
 const ChatList = (props) => {
-
+    const currentuid = auth.currentUser ? auth.currentUser.uid : " ";
     console.log("list rendered");
-    const query = firestore.collection('users').doc(auth.currentUser.uid).collection('strangers').orderBy('channelID');
+    const query = firestore.collection('users').doc(currentuid).collection('strangers').orderBy('channelID');
     //console.log(query);
     const [channelidArr] = useCollectionData(query, { idField: 'id' });
     //console.log(channelIDs);
@@ -36,10 +36,10 @@ const ChatList = (props) => {
     //     var chooseRoom = firebase.functions().httpsCallable('chooseRoom');
     //     chooseRoom({ uid: auth.currentUser.uid, roomNum: roomID });
     // }
-    return (
+    return auth.currentUser && (
         <div className = "vertical-menu">
             {channelidArr && channelidArr.map(channelid =>
-                    <a key={channelid.channelID} onClick={()=>props.parentCallback(channelid.channelID)}>{channelid.channelID}</a>
+                    <a key={channelid.channelID} onClick={()=>props.parentCallback(channelid.channelID)}>{channelid.ID}</a>
                 )}
         </div>
     );

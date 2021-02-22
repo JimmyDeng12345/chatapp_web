@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import firebase, {firestore, auth} from '../Firebase.js';
+import firebase, { firestore, auth } from '../Firebase.js';
 import 'firebase/auth';
-
+import {
+  Link, Switch, Route, Redirect
+} from "react-router-dom";
+import SignUp from './SignUp.js';
 function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  
+
   const onChangeHandler = (event) => {
     const { name, value } = event.currentTarget;
 
@@ -34,41 +37,47 @@ function SignIn() {
   };
 
 
-  return (
+  return !auth.currentUser ? (
     <div>
-    <form className="">
-      <label htmlFor="userEmail" className="block">
-        Email:
+      <form className="">
+        <label htmlFor="userEmail" className="block">
+          Email:
         </label>
-      <input
-        type="email"
-        className="my-1 p-1 w-full"
-        name="userEmail"
-        value={email}
-        placeholder="E.g: faruq123@gmail.com"
-        id="userEmail"
-        onChange={(event) => onChangeHandler(event)}
-      />
-      <label htmlFor="userPassword" className="block">
-        Password:
+        <input
+          type="email"
+          className="my-1 p-1 w-full"
+          name="userEmail"
+          value={email}
+          placeholder="E.g: faruq123@gmail.com"
+          id="userEmail"
+          onChange={(event) => onChangeHandler(event)}
+        />
+        <label htmlFor="userPassword" className="block">
+          Password:
         </label>
-      <input
-        type="password"
-        className="mt-1 mb-3 p-1 w-full"
-        name="userPassword"
-        value={password}
-        placeholder="Your Password"
-        id="userPassword"
-        onChange={(event) => onChangeHandler(event)}
-      />
-      <button className="bg-green-400 hover:bg-green-500 w-full py-2 text-white" onClick={(event) => { signInWithEmailAndPasswordHandler(event, email, password) }}>
-        Sign in
+        <input
+          type="password"
+          className="mt-1 mb-3 p-1 w-full"
+          name="userPassword"
+          value={password}
+          placeholder="Your Password"
+          id="userPassword"
+          onChange={(event) => onChangeHandler(event)}
+        />
+        <button className="bg-green-400 hover:bg-green-500 w-full py-2" onClick={(event) => { signInWithEmailAndPasswordHandler(event, email, password) }}>
+          Sign in
         </button>
-    </form>
-
-    <button onClick={signInWithGoogle}>Sign in with Google</button>
-  </div>
-  );
+      </form>
+      <p>or</p>
+      <button onClick={signInWithGoogle}>Sign in with Google</button>
+      <Link to={"/signup"}>Or you can sign up here</Link>
+      <Switch>
+        <Route path="/signup">
+          <SignUp />
+        </Route>
+      </Switch>
+    </div>
+  ) : <Redirect to='/'/>;
 };
 
 export default SignIn;

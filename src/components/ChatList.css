@@ -1,7 +1,9 @@
 .vertical-menu {
-  width: 200px;
-  height: 150px;
+  width: 20vh;
+  height: 80vh;
   overflow-y: auto;
+  overflow-x:hidden;
+  float: left;
 }
 
 .vertical-menu a {
@@ -19,4 +21,17 @@
 .vertical-menu a.active {
   background-color: #4CAF50;
   color: white;
+}
+
+
+.vertical-menu::-webkit-scrollbar {
+  width: 0.25rem;
+}
+
+.vertical-menu::-webkit-scrollbar-track {
+  background: #1e1e24;
+}
+
+.vertical-menu::-webkit-scrollbar-thumb {
+  background: #6649b8;
 }

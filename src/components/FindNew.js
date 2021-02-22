@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import firebase, { firestore, auth } from '../Firebase.js';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-
+import {
+    Redirect
+  } from "react-router-dom";
 
 const FindNew = () => {
     //firestore.collection('users')
@@ -52,12 +54,12 @@ const FindNew = () => {
         //     channelID: combinedID
         // });
     }
-    return auth.currentUser && (
+    return auth.currentUser ? (
         <div>
             <button onClick={onClick}>Find a random person to chat with!</button>
-            <h1>Found: {foundUser}</h1>
+            <h1 className = 'text-light'>Found: {foundUser}</h1>
         </div>
-    );
+    )  : <Redirect to='/signin'/>;
 };
 
 export default FindNew;

@@ -2,9 +2,9 @@ import React from 'react';
 
 import firebase, {firestore, auth} from '../Firebase.js';
 
-function SignOut(props) {
+function SignOut() {
   return auth.currentUser && (
-    <button onClick={() => {props.parentCallback(" "); auth.signOut()}}>Sign Out</button>
+    <button onClick={() => {auth.signOut()}}>Sign Out</button>
   )
 };
 

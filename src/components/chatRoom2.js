@@ -1,16 +1,16 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { withRouter } from 'react-router';
+import {
+    Redirect
+  } from "react-router-dom";
 import { useCollectionData, useDocument, useDocumentData } from 'react-firebase-hooks/firestore';
 import firebase, { firestore, auth } from '../Firebase.js';
 import ChatMessage from './ChatMessage';
 import { _onRequestWithOptions } from 'firebase-functions/lib/providers/https';
-
+import './ChatRoom2.css';
 
 const ChatRoom2 = (props) => {
     var encrypt = firebase.functions().httpsCallable('encrypt');
     console.log("chat room rendered");
-
-    var encrypt = firebase.functions().httpsCallable('encrypt');
     var decrypt = firebase.functions().httpsCallable('decrypt');
 
     function saveQuery() {
@@ -55,23 +55,23 @@ const ChatRoom2 = (props) => {
             profile: "yes",
         })
     }
-    return quit != 'quit' && (<>
-        <main>
+    return auth.currentUser ? (<div>
+        <main className = 'chatmain2'>
             {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
         </main>
 
-        <form onSubmit={sendMessage}>
+        <form className = 'chatform' onSubmit={sendMessage}>
 
-            <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="say something nice" />
+            <input className = 'chatinput' value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Type here!" />
 
-            <button type="submit" disabled={!formValue}>🕊️</button>
+            <button className = 'sendbutton' type="submit" disabled={!formValue}>🕊️</button>
 
         </form>
 
 
-        <button onClick={()=>onQuit()}>Quit</button>
-        <button onClick={()=>onProfileRequest()}>Request Profile</button>
-    </>)
+        {/* <button onClick={()=>onQuit()}>Quit</button>
+        <button onClick={()=>onProfileRequest()}>Request Profile</button> */}
+    </div>)  : <Redirect to='/signin'/>;
 }
 
 

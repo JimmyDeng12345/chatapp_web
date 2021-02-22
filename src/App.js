@@ -38,53 +38,45 @@ function App() {
   // };
   return (
     <div className="App">
-      <header>
         <h1>⚛️🔥💬</h1>
-        <SignOut parentCallback={callbackFunction}/>
-      </header>
+        <BrowserRouter className="navbar navbar-default">
+          {user? <Footer className="" /> : null}
+          <Switch>
+            <Route path="/profile">
+              <Profile />
+            </Route>
+            <Route path="/new">
+              <FindNew />
+            </Route>
+            <Route path="/signin">
+              <SignIn />
+            </Route>
+            <Route path="/signup">
+              <SignUp />
+            </Route>
+            {/* <Route path="/room">
+            {user ? <ChatRoom /> : <SignIn auth={auth}/>}
+  </Route> */}
+
+            {/* {directRooms.map(channelid => <Route path={"direct/"+channelid}>
+            {user ? <div><ChatList parentCallback={callbackFunction}/> <ChatRoom2 channelid={channelid.channelID}/></div>  : <SignIn/>}
+          </Route>)} */}
+            <Route path="/direct">
+              <ChatList parentCallback={callbackFunction} />
+              {roomNum === " " ? <h1 className = 'text-light'>Either click the left nav bar to chat with someone, or match with a new random</h1> : <ChatRoom2 channelid={roomNum} />}
+            </Route>
+            <Route path="/">
+              <ChatRoom />
+            </Route>
+
+          </Switch>
+        </BrowserRouter>
 
       {/* <section>
         {user ? <ChatRoom /> : <SignIn />}
       </section> */}
 
-      <BrowserRouter className="navbar navbar-default">
-        <Footer className= ""/>
-        <Switch>
-          <Route path="/profile">
-            <Profile />
-          </Route>
-          <Route path="/new">
-            <FindNew />
-          </Route>
-          {/* <Route path="/room">
-            {user ? <ChatRoom /> : <SignIn auth={auth}/>}
-          </Route> */}
-          <Route path="/signup">
-            {() => {
-              if (!user) {
-                return <SignUp />;
-              } else {
-                return null;
-              }
-            }}
-          </Route>
-          {/* {directRooms.map(channelid => <Route path={"direct/"+channelid}>
-            {user ? <div><ChatList parentCallback={callbackFunction}/> <ChatRoom2 channelid={channelid.channelID}/></div>  : <SignIn/>}
-          </Route>)} */}
-          <Route path="/direct">
-            {user ?
-              <div>
-                <ChatList parentCallback={callbackFunction}/>
-                {roomNum===" " ? <h1>No Room yet</h1> : <ChatRoom2 channelid={roomNum}/>}
-              </div> : <SignIn />}
-          </Route>
-          <Route path="/">
-            {user ? <ChatRoom /> : <SignIn />}
-          </Route>
 
-        </Switch>
-
-      </BrowserRouter>
 
     </div>
   );

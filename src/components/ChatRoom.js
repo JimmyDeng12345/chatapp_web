@@ -1,9 +1,10 @@
 import React , { useRef, useState } from 'react';
-
+import {
+  Redirect
+} from "react-router-dom";
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import firebase, {firestore, auth} from '../Firebase.js';
-import ChatMessage from './ChatMessage';
-import './ChatRoom.css';
+import ChatMessage from './ChatMessage.js';
 
 
 
@@ -34,19 +35,19 @@ function ChatRoom(){
     setFormValue('');
   }
   
-  return (<>
-    <main>
-      {messages && messages.map(m => <ChatMessage key={m.id} message={m} />)}
+  return auth.currentUser ? (<>
+    <main className = 'chatmain'>
+      {messages && messages.map(m => <ChatMessage key={m.id} message={m}/>)}
     </main>
 
-    <form onSubmit={sendMessage}>
+    <form className = 'chatform' onSubmit={sendMessage}>
 
-      <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="say something nice" />
+      <input className = 'chatinput' value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Type here!" />
 
-      <button type="submit" disabled={!formValue}>🕊️</button>
+      <button className = 'sendbutton' type="submit" disabled={!formValue}>🕊️</button>
 
     </form>
-  </>)
+  </>) : <Redirect to='/signin'/>;
 }
 
 

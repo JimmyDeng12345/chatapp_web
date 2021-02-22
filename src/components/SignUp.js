@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-    Link
+    Link, Redirect
 } from "react-router-dom";
 import firebase from '../Firebase.js';
 
@@ -17,7 +17,7 @@ const SignUp = () => {
     const createUserWithEmailAndPasswordHandler = (event, email, password, name) => {
         event.preventDefault();
         auth.createUserWithEmailAndPassword(email, password);
-        
+
         // .then((user)=>{
         //     if(user){
         //         user.updateProfile({
@@ -41,7 +41,7 @@ const SignUp = () => {
             setDisplayName(value);
         }
     };
-    return (
+    return !auth.currentUser ? (
         <div className="mt-8">
             <h1 className="text-3xl mb-2 text-center font-bold">Sign Up</h1>
             <div className="border border-blue-400 mx-auto w-11/12 md:w-2/4 rounded py-8 px-4 md:px-8">
@@ -90,7 +90,7 @@ const SignUp = () => {
                     <button
                         className="bg-green-400 hover:bg-green-500 w-full py-2 text-white"
                         onClick={event => {
-                            createUserWithEmailAndPasswordHandler(event, email, password,displayName)
+                            createUserWithEmailAndPasswordHandler(event, email, password, displayName)
                         }}
                     >
                         Sign up
@@ -110,6 +110,6 @@ const SignUp = () => {
                 </p>
             </div>
         </div>
-    );
+    ) : <Redirect to='/'/>;
 };
 export default SignUp;

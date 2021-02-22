@@ -1,27 +1,29 @@
-// The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 const functions = require('firebase-functions');
-
-// The Firebase Admin SDK to access Firestore.
 const admin = require('firebase-admin');
 admin.initializeApp();
 var CryptoJS = require("crypto-js");
+const { user } = require('firebase-functions/lib/providers/auth');
 
 
 exports.writeToDataBase = functions.auth.user().onCreate(async (user) => {
     const uid = user.uid;
     const email = user.email; // The email of the user.
-    const displayName = user.displayName; // The display name of the user.
-    const photoURL = user.photoURL;
+    const displayName = user.displayName || "User"; // The display name of the user.
+    const photoURL = user.photoURL || "https://cdn4.iconfinder.com/data/icons/basic-user-interface-elements/700/user-account-profile-human-avatar-face-head--512.png";
     const other = user.emailVerified;
     var userCountPath = await admin.firestore().collection('info').doc('userCount').get();
+    await admin.auth().updateUser(uid, {
+        displayName: displayName,
+        photoURL: photoURL
+    });
     if (!userCountPath.exists) {
         admin.firestore().collection('info').doc('userCount').set({
             userCount: 1
         }).then(
             await admin.firestore().collection('users').doc(user.uid).set({
-                name: displayName || "NULL",
+                name: displayName,
                 email: email,
-                photoURL: photoURL || "NULL",
+                photoURL: photoURL,
                 info: "NULL",
                 userCount: 1
             })
@@ -32,9 +34,9 @@ exports.writeToDataBase = functions.auth.user().onCreate(async (user) => {
             userCount: count
         }).then(
             await admin.firestore().collection('users').doc(user.uid).set({
-                name: displayName || "NULL",
+                name: displayName,
                 email: email,
-                photoURL: photoURL || "NULL",
+                photoURL: photoURL,
                 info: "NULL",
                 userCount: count
             })
@@ -48,20 +50,14 @@ exports.initConversation = functions.https.onCall((data, context) => {
     var uidA = data.uidA;
     var uidB = data.uidB;
     combinedID = uidA > uidB ? uidB + uidA : uidA + uidB
-    // admin.firestore().collection('messages').doc(combinedID).collection('chats').add({
-    //     text: CryptoJS.AES.encrypt("hi", 'secret key 123').toString(),
-    //     createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    //     uidA:"A",
-    //     uidB:"B",
-    //     url: "url"
-    // });
-
     admin.firestore().collection('users').doc(uidA).collection('strangers').add({
-        channelID: combinedID
+        channelID: combinedID,
+        ID: uidB,
     });
 
     admin.firestore().collection('users').doc(uidB).collection('strangers').add({
-        channelID: combinedID
+        channelID: combinedID,
+        ID: uidA,
     });
 });
 
