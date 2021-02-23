@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import firebase, { firestore, auth } from '../Firebase.js';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
+import axios from 'axios';
 import {
     Redirect
   } from "react-router-dom";
@@ -39,7 +40,8 @@ const FindNew = () => {
                 
                 setFoundUser(users.data().name);
                 var initConversation = firebase.functions().httpsCallable('initConversation');
-                initConversation({ uidA: auth.currentUser.uid, uidB: users.id });
+                axios.post("http://localhost:5001/chat-app-c0207/us-central1/initConversation", {uidA: auth.currentUser.uid, uidB: users.id });
+                //initConversation({ uidA: auth.currentUser.uid, uidB: users.id });
             });
         });
         // combinedID = uidA > uidB ? uidB+uidA : uidA+uidB
